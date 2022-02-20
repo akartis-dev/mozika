@@ -4,7 +4,8 @@ import 'dart:io';
 import 'package:audio_manager/audio_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mozika/utils/audio_utils.dart';
+import 'package:mozika/model/entity/audio_model.dart';
+import 'package:mozika/services/audio_service.dart';
 
 class PlayerScreen extends StatefulWidget {
   const PlayerScreen({Key? key}) : super(key: key);
@@ -17,29 +18,25 @@ class PlayerScreenState extends State<PlayerScreen> {
   String _platformVersion = 'Unknown';
 
   late var list = [];
+  late List<Audio> audioList = [];
 
   @override
   void initState() {
     super.initState();
-    // initPlatformState();
+    initPlatformState();
+
     // setupAudio();
   }
 
   Future<bool> initAudioList() async {
-    list = await AudioUtils().getAllAudioFiles();
+    // AudioService().saveAllAudioInDatabase();
+    audioList = await AudioService().getAllAudio();
+    list = await AudioService().getAllAudioFiles();
     // log(list.toString());
     return true;
   }
 
   void setupAudio() {
-    List<AudioInfo> _list = [];
-
-    list.forEach((e) => _list.add(AudioInfo(e['url'] ?? "",
-        title: e['title'] ?? "",
-        desc: e['desc'] ?? "",
-        coverUrl: e['coverUrl'] ?? "")));
-
-    AudioManager.instance.audioList = _list;
     AudioManager.instance.intercepter = true;
     AudioManager.instance.play(auto: false);
   }
@@ -78,22 +75,23 @@ class PlayerScreenState extends State<PlayerScreen> {
                       Expanded(
                           child: ListView.separated(
                               itemBuilder: (context, index) {
+                                Audio currentMusic = audioList[index];
                                 return ListTile(
-                                  title: Text(list[index]['title'] ?? ""),
-                                  subtitle: Text(list[index]['desc'] ?? ""),
+                                  title: Text(currentMusic.name),
+                                  subtitle: Text(currentMusic.folder),
                                   onTap: () {
-                                    var vazo = list[index];
                                     AudioManager.instance.file(
-                                        File(vazo['url']), vazo['title'],
-                                        desc: vazo['desc'],
-                                        cover: vazo['coverUrl'],
+                                        File(currentMusic.uriPath),
+                                        currentMusic.name,
+                                        desc: "",
+                                        cover: 'assets/images/photo1.jpeg',
                                         auto: true);
                                   },
                                 );
                               },
                               separatorBuilder: (context, index) =>
                                   const Divider(),
-                              itemCount: list.length))
+                              itemCount: audioList.length))
                     ],
                   ),
                 ),

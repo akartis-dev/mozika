@@ -1,14 +1,17 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:audio_manager/audio_manager.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
+import 'package:mozika/model/database/db_sqlite.dart';
+import 'package:mozika/model/entity/audio_model.dart';
+import 'package:mozika/utils/audio_utils.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:sqflite/sqflite.dart';
 
-class AudioUtils {
+class AudioService {
+  final String storagePath = "/storage/emulated/0/";
   final List<String> excludePath = [
     "/storage/emulated/0/Android",
     "/storage/emulated/0/Sound",
@@ -65,5 +68,45 @@ class AudioUtils {
     }
 
     return audio;
+  }
+
+  /// Save one audio file in database
+  /// Manipulate audio file to get parent
+  /// Get audio name without extension
+  Future<int> saveAudioFileInDb(
+      {required String filePath, required String uri}) async {
+    File file = File(filePath);
+    final String parent =
+        file.parent.path.replaceAll(RegExp(r'\/storage\/emulated\/0\/'), '');
+    final String name = basenameWithoutExtension(file.path);
+
+    Audio audio = Audio(name: name, folder: parent, uriPath: uri);
+    final db = await DatabaseInstance.createInstance();
+    return await db.insert('audio', audio.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace);
+  }
+
+  /// Map all audio file and save in database
+  Future<void> saveAllAudioInDatabase() async {
+    List allAudio = await AudioUtils().getAllAudioFiles();
+
+    for (var audioInfo in allAudio) {
+      await saveAudioFileInDb(
+          filePath: audioInfo['title'], uri: audioInfo['url']);
+    }
+  }
+
+  Future<List<Audio>> getAllAudio() async {
+    final db = await DatabaseInstance.createInstance();
+
+    final List<Map<String, dynamic>> data = await db.query('audio');
+
+    return List.generate(
+        data.length,
+        (i) => Audio(
+            id: data[i]['id'],
+            name: data[i]['name'],
+            folder: data[i]['folder'],
+            uriPath: data[i]['uri_path']));
   }
 }
