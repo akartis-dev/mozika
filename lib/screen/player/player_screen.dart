@@ -30,7 +30,7 @@ class PlayerScreenState extends State<PlayerScreen> {
 
   Future<bool> initAudioList() async {
     // AudioService().saveAllAudioInDatabase();
-    audioList = await AudioService().getAllAudio();
+    audioList = await AudioService().getAllAudioFromDb();
     list = await AudioService().getAllAudioFiles();
     // log(list.toString());
     return true;
@@ -80,12 +80,9 @@ class PlayerScreenState extends State<PlayerScreen> {
                                   title: Text(currentMusic.name),
                                   subtitle: Text(currentMusic.folder),
                                   onTap: () {
-                                    AudioManager.instance.file(
-                                        File(currentMusic.uriPath),
-                                        currentMusic.name,
-                                        desc: "",
-                                        cover: 'assets/images/photo1.jpeg',
-                                        auto: true);
+                                    AudioService.playMusicInAudioManager(
+                                        uri: currentMusic.uriPath,
+                                        name: currentMusic.name);
                                   },
                                 );
                               },

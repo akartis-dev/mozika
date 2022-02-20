@@ -96,17 +96,53 @@ class AudioService {
     }
   }
 
-  Future<List<Audio>> getAllAudio() async {
+  /// Get all audio file in database
+  /// Sqlite Query
+  /// Create a list to Audio Model
+  /// Add all audio in AudioManager
+  Future<List<Audio>> getAllAudioFromDb() async {
     final db = await DatabaseInstance.createInstance();
 
     final List<Map<String, dynamic>> data = await db.query('audio');
 
-    return List.generate(
+    final List<Audio> allAudio = List.generate(
         data.length,
         (i) => Audio(
             id: data[i]['id'],
             name: data[i]['name'],
             folder: data[i]['folder'],
             uriPath: data[i]['uri_path']));
+
+    AudioManager.instance.audioList.clear();
+
+    for (Audio file in allAudio) {
+      AudioInfo audioInfo = AudioInfo(file.uriPath,
+          title: file.name,
+          desc: file.folder,
+          coverUrl: "assets/images/photo1.jpeg");
+
+      AudioManager.instance.audioList.add(audioInfo);
+    }
+
+    return allAudio;
+  }
+
+  /// Play music in audio manager
+  static void playMusicInAudioManager(
+      {required String uri, required String name}) {
+    AudioManager.instance.file(File(uri), name,
+        desc: "", cover: 'assets/images/photo1.jpeg', auto: true);
+  }
+
+  /// Format audio duration
+  static String formatAudioDuration(Duration d) {
+    if (d == null) return "--:--";
+
+    int minute = d.inMinutes;
+    int second = (d.inSeconds > 60) ? (d.inSeconds % 60) : d.inSeconds;
+    String format = ((minute < 10) ? "0$minute" : "$minute") +
+        ":" +
+        ((second < 10) ? "0$second" : "$second");
+    return format;
   }
 }
