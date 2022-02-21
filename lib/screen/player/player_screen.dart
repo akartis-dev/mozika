@@ -5,6 +5,7 @@ import 'package:audio_manager/audio_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mozika/model/entity/audio_model.dart';
+import 'package:mozika/screen/player/player_audio_screen.dart';
 import 'package:mozika/services/audio_service.dart';
 
 class PlayerScreen extends StatefulWidget {
@@ -17,7 +18,6 @@ class PlayerScreen extends StatefulWidget {
 class PlayerScreenState extends State<PlayerScreen> {
   String _platformVersion = 'Unknown';
 
-  late var list = [];
   late List<Audio> audioList = [];
 
   @override
@@ -31,8 +31,6 @@ class PlayerScreenState extends State<PlayerScreen> {
   Future<bool> initAudioList() async {
     // AudioService().saveAllAudioInDatabase();
     audioList = await AudioService().getAllAudioFromDb();
-    list = await AudioService().getAllAudioFiles();
-    // log(list.toString());
     return true;
   }
 
@@ -60,6 +58,16 @@ class PlayerScreenState extends State<PlayerScreen> {
     return Scaffold(
         appBar: AppBar(
           title: Text('Demo player'),
+          actions: [
+            IconButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const PlayerAudioScreen()));
+                },
+                icon: const Icon(Icons.audiotrack))
+          ],
         ),
         body: FutureBuilder(
             future: initAudioList(),

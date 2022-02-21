@@ -24,7 +24,7 @@ class _PlayerAudioScreenState extends State<PlayerAudioScreen> {
   void initState() {
     super.initState();
     // AudioService().saveAllAudioInDatabase();
-    setupAudio();
+    // setupAudio();
   }
 
   void setupAudio() async {

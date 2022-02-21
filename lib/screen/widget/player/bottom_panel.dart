@@ -13,9 +13,10 @@ class _PlayerBottomPanelState extends State<PlayerBottomPanel> {
   PlayMode playMode = AudioManager.instance.playMode;
   Duration _duration = const Duration(milliseconds: 0);
   Duration _position = const Duration(milliseconds: 0);
-  double _slider = 1;
+  double _slider = 0;
   String _currentTitle = '';
   bool _isPlaying = false;
+  bool _refreshPlayer = false;
 
   Widget getPlayModeIcon(PlayMode playMode) {
     print(playMode);
@@ -86,9 +87,19 @@ class _PlayerBottomPanelState extends State<PlayerBottomPanel> {
           setState(() {});
           break;
         case AudioManagerEvents.timeupdate:
+          if (!_refreshPlayer) {
+            _position = AudioManager.instance.position;
+            _duration = AudioManager.instance.duration;
+            _currentMusicPlaying();
+            _isPlaying = AudioManager.instance.isPlaying;
+
+            setState(() {
+              _refreshPlayer = true;
+            });
+          }
+
           _position = AudioManager.instance.position;
           _slider = _position.inMilliseconds / _duration.inMilliseconds;
-
           setState(() {});
           break;
         case AudioManagerEvents.playstatus:
@@ -126,6 +137,7 @@ class _PlayerBottomPanelState extends State<PlayerBottomPanel> {
 
   @override
   Widget build(BuildContext context) {
+    print('slider, $_slider');
     return Column(
       children: [
         Text(
@@ -152,6 +164,8 @@ class _PlayerBottomPanelState extends State<PlayerBottomPanel> {
                     ),
                     child: Slider(
                         value: _slider,
+                        min: 0.0,
+                        max: 1.0,
                         onChanged: onChangeSlider,
                         onChangeEnd: onChangeSliderEnd))),
           ],
