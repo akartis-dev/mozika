@@ -6,7 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mozika/model/entity/audio_model.dart';
 import 'package:mozika/screen/player/player_audio_screen.dart';
+import 'package:mozika/screen/widget/appBar/appbar.dart';
+import 'package:mozika/screen/widget/music/one_music_item.dart';
+import 'package:mozika/screen/widget/music/search_input.dart';
+import 'package:mozika/screen/widget/player/mini_player.dart';
 import 'package:mozika/services/audio_service.dart';
+import 'package:mozika/utils/theme.dart';
 
 class PlayerScreen extends StatefulWidget {
   const PlayerScreen({Key? key}) : super(key: key);
@@ -56,8 +61,8 @@ class PlayerScreenState extends State<PlayerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Demo player'),
+        appBar: AppPlayerAppBar(
+          title: "Mozika",
           actions: [
             IconButton(
                 onPressed: () {
@@ -69,29 +74,27 @@ class PlayerScreenState extends State<PlayerScreen> {
                 icon: const Icon(Icons.audiotrack))
           ],
         ),
-        body: FutureBuilder(
-            future: initAudioList(),
-            builder: ((context, snapshot) {
-              if (!snapshot.hasData) {
-                return Text('Loading');
-              }
+        body: Stack(children: [
+          FutureBuilder(
+              future: initAudioList(),
+              builder: ((context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Text('Loading');
+                }
 
-              return Center(
-                child: Container(
+                return Container(
+                  padding: CustomTheme.container,
+                  color: CustomTheme.black,
                   child: Column(
                     children: [
+                      SearchInput(),
                       Expanded(
                           child: ListView.separated(
                               itemBuilder: (context, index) {
                                 Audio currentMusic = audioList[index];
-                                return ListTile(
-                                  title: Text(currentMusic.name),
-                                  subtitle: Text(currentMusic.folder),
-                                  onTap: () {
-                                    AudioService.playMusicInAudioManager(
-                                        uri: currentMusic.uriPath,
-                                        name: currentMusic.name);
-                                  },
+                                return OneMusicItem(
+                                  key: Key(index.toString()),
+                                  audio: currentMusic,
                                 );
                               },
                               separatorBuilder: (context, index) =>
@@ -99,8 +102,9 @@ class PlayerScreenState extends State<PlayerScreen> {
                               itemCount: audioList.length))
                     ],
                   ),
-                ),
-              );
-            })));
+                );
+              })),
+          MiniPlayer(),
+        ]));
   }
 }

@@ -41,6 +41,7 @@ dependencies:
   sqflite: ^2.0.2
   path:
   flutter_ffmpeg: ^0.4.2
+  glassmorphism:
   
 dev_dependencies:
   flutter_test:
