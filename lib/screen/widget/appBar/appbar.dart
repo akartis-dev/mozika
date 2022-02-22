@@ -26,5 +26,5 @@ class AppPlayerAppBar extends StatelessWidget implements PreferredSize {
   Widget get child => Container();
 
   @override
-  Size get preferredSize => const Size.fromHeight(70);
+  Size get preferredSize => const Size.fromHeight(60);
 }

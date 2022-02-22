@@ -42,6 +42,7 @@ dependencies:
   path:
   flutter_ffmpeg: ^0.4.2
   glassmorphism:
+  on_audio_edit: ^1.5.1
   
 dev_dependencies:
   flutter_test:
