@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:mozika/model/entity/audio_model.dart';
 import 'package:mozika/screen/player/player_audio_screen.dart';
 import 'package:mozika/screen/widget/appBar/appbar.dart';
+import 'package:mozika/screen/widget/appBar/bottom_bar.dart';
 import 'package:mozika/screen/widget/music/one_music_item.dart';
 import 'package:mozika/screen/widget/music/search_input.dart';
 import 'package:mozika/screen/widget/player/mini_player.dart';
@@ -74,6 +75,7 @@ class PlayerScreenState extends State<PlayerScreen> {
                 icon: const Icon(Icons.audiotrack))
           ],
         ),
+        bottomNavigationBar: const BottomBar(),
         body: Stack(children: [
           FutureBuilder(
               future: initAudioList(),

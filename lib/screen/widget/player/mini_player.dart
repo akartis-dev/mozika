@@ -55,17 +55,17 @@ class _MiniPlayerState extends State<MiniPlayer> {
       left: 0,
       child: GlassmorphicContainer(
         width: MediaQuery.of(context).size.width,
-        height: 100,
+        height: 75,
         borderRadius: 0,
-        blur: 2,
+        blur: 20,
         alignment: Alignment.bottomCenter,
         border: 0,
         linearGradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
             colors: [
-              const Color(0xFFffffff).withOpacity(0.1),
-              const Color(0xFFFFFFFF).withOpacity(0.05),
+              Color(0xFF47423c).withOpacity(0.7),
+              Color(0xFF2a2a2a).withOpacity(0.7),
             ],
             stops: const [
               0.1,
