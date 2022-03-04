@@ -2,8 +2,12 @@ import 'dart:io';
 
 import 'package:audio_manager/audio_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
+import 'package:flutter_ffmpeg/media_information.dart';
 import 'package:mozika/model/database/db_sqlite.dart';
 import 'package:mozika/model/entity/audio_model.dart';
+import 'package:mozika/model/interface/audio_custom_info.dart';
 import 'package:mozika/utils/audio_utils.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -144,5 +148,15 @@ class AudioService {
         ":" +
         ((second < 10) ? "0$second" : "$second");
     return format;
+  }
+
+  static Future<AudioCustomInfo> getAudioInformation(String uriPath) async {
+    final FlutterFFprobe _flutterFFprobe = new FlutterFFprobe();
+    MediaInformation info = await _flutterFFprobe.getMediaInformation(uriPath);
+    // print(info.getMediaProperties());
+    return AudioCustomInfo(
+        artist: info.getMediaProperties()?['tags']?['artist'],
+        duration: info.getMediaProperties()?['duration'],
+        title: info.getMediaProperties()?['tags']?['title']);
   }
 }

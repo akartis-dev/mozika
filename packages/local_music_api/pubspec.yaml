@@ -1,0 +1,29 @@
+name: local_music_api
+description: A new Flutter package project.
+version: 0.0.1
+homepage:
+publish_to: "none"
+
+environment:
+  sdk: ">=2.17.0-141.0.dev <3.0.0"
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  path_provider:
+  path:
+  permission_handler: ^8.3.0
+  sqflite: ^2.0.2
+  json_annotation:
+  equatable: ^2.0.3 
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^1.0.0
+  build_runner: ^2.0.0
+  json_serializable: ^6.0.0
+  test: ^1.17.0
+
+flutter:
