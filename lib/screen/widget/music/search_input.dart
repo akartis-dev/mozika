@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mozika/utils/theme.dart';
 
 class SearchInput extends StatefulWidget {
   const SearchInput({Key? key}) : super(key: key);

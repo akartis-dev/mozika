@@ -8,3 +8,5 @@ abstract class AudioEvent extends Equatable {
 }
 
 class AudioListStarted extends AudioEvent {}
+
+class AudioResetList extends AudioEvent {}

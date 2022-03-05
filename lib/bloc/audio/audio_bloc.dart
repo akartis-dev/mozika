@@ -11,12 +11,17 @@ class AudioBloc extends Bloc<AudioEvent, AudioStates> {
   AudioBloc({required LocalRepository localRepository})
       : _localRepository = localRepository,
         super(AudioInitial(localRepository.getAllAudioList())) {
-    on<AudioListStarted>(onInit);
+    on<AudioListStarted>(_onInit);
+    on<AudioResetList>(_onReset);
   }
 
-  onInit(AudioListStarted event, Emitter<AudioStates> emit) {
-    Stream<List<AudioModels>> stream = _localRepository.getAllAudioList();
-    print(stream);
+  _onInit(AudioListStarted event, Emitter<AudioStates> emit) {
+    Stream<List<AudioModels>?> stream = _localRepository.getAllAudioList();
+
     emit(AudioHydrate(stream));
+  }
+
+  _onReset(AudioResetList event, Emitter<AudioStates> emit) {
+    _localRepository.resetAudioDatabase();
   }
 }

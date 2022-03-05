@@ -5,11 +5,9 @@ import 'package:audio_manager/audio_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
 import 'package:local_music_repository/local_music_repository.dart';
 import 'package:mozika/bloc/audio/audio_bloc.dart';
 import 'package:mozika/model/entity/audio_model.dart';
-import 'package:mozika/model/interface/audio_custom_info.dart';
 import 'package:mozika/screen/player/player_audio_screen.dart';
 import 'package:mozika/screen/widget/appBar/appbar.dart';
 import 'package:mozika/screen/widget/appBar/bottom_bar.dart';
@@ -66,6 +64,11 @@ class PlayerScreenState extends State<PlayerScreen> {
           actions: [
             IconButton(
                 onPressed: () {
+                  context.read<AudioBloc>().add(AudioResetList());
+                },
+                icon: const Icon(Icons.delete)),
+            IconButton(
+                onPressed: () {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -76,43 +79,57 @@ class PlayerScreenState extends State<PlayerScreen> {
         ),
         bottomNavigationBar: const BottomBar(),
         body: Stack(children: [
+          SearchInput(),
           BlocBuilder<AudioBloc, AudioStates>(builder: ((context, state) {
             // state.audios.listen(print);
             return StreamBuilder(
               stream: state.audios,
               builder: (BuildContext context,
-                  AsyncSnapshot<List<AudioModels>> snapshot) {
-                List<Widget> children = [];
+                  AsyncSnapshot<List<AudioModels>?> snapshot) {
                 if (!snapshot.hasData) {
-                  children = [
-                    const Center(
-                        child: CircularProgressIndicator(color: Colors.white))
-                  ];
+                  return Container(
+                      width: MediaQuery.of(context).size.width,
+                      color: CustomTheme.black,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          Center(
+                            child:
+                                CircularProgressIndicator(color: Colors.white),
+                          ),
+                          SizedBox(
+                            height: 30,
+                          ),
+                          Center(
+                            child: Text("Rafraichissement en cours..."),
+                          )
+                        ],
+                      ));
                 }
 
-                children = [
-                  Expanded(
-                    child: ListView.separated(
-                        itemBuilder: (context, index) {
-                          AudioModels audioModel = snapshot.data![index];
-                          Audio currentMusic = Audio(
-                              name: audioModel.name,
-                              folder: audioModel.folder,
-                              uriPath: audioModel.uriPath);
-                          return OneMusicItem(
-                            key: Key(index.toString()),
-                            audio: currentMusic,
-                          );
-                        },
-                        separatorBuilder: (context, index) => const Divider(),
-                        itemCount: snapshot.data?.length ?? 0),
-                  )
-                ];
                 return Container(
                   width: MediaQuery.of(context).size.width,
                   color: CustomTheme.black,
                   child: Column(
-                    children: children,
+                    children: [
+                      Expanded(
+                        child: ListView.separated(
+                            itemBuilder: (context, index) {
+                              AudioModels audioModel = snapshot.data![index];
+                              Audio currentMusic = Audio(
+                                  name: audioModel.name,
+                                  folder: audioModel.folder,
+                                  uriPath: audioModel.uriPath);
+                              return OneMusicItem(
+                                key: Key(index.toString()),
+                                audio: currentMusic,
+                              );
+                            },
+                            separatorBuilder: (context, index) =>
+                                const Divider(),
+                            itemCount: snapshot.data?.length ?? 0),
+                      )
+                    ],
                   ),
                 );
               },

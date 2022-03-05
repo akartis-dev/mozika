@@ -4,5 +4,7 @@ abstract class LocalMusicRepositoryInterface {
   final audioStreamController = null; //BehaviorSubject
   LocalMusicRepositoryInterface();
 
-  Stream<List<AudioModels>> getAllAudioList();
+  Stream<List<AudioModels>?> getAllAudioList();
+
+  Future<void> resetAudioDatabase();
 }

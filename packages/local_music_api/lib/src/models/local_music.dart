@@ -6,7 +6,9 @@ abstract class LocalMusic {
 
   LocalMusic();
 
-  Stream<AudioModels> _allAudioList();
+  Future<List<AudioModels>> _allAudioList();
 
   Future<List<AudioModels>> getAllAudioList();
+
+  Future<bool> resetAudioTable();
 }
