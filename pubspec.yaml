@@ -17,6 +17,7 @@ dependencies:
   flutter_bloc: ^8.0.1
   flutter_ffmpeg: ^0.4.2
   glassmorphism: null
+  google_fonts: ^2.3.1
   local_music_repository:
     path: packages/local_music_repository
   path: null

@@ -57,10 +57,6 @@ class _PlayerBottomPanelState extends State<PlayerBottomPanel> {
     AudioManager.instance.playOrPause();
   }
 
-  void stopSong() {
-    AudioManager.instance.stop();
-  }
-
   void changeMode() {
     if (playMode == PlayMode.sequence) {
       AudioManager.instance.nextMode(playMode: PlayMode.shuffle);
@@ -137,69 +133,91 @@ class _PlayerBottomPanelState extends State<PlayerBottomPanel> {
 
   @override
   Widget build(BuildContext context) {
-    print('slider, $_slider');
     return Column(
       children: [
-        Text(
-          _currentTitle,
-          style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-        ),
         Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Expanded(
-                child: SliderTheme(
-                    data: SliderTheme.of(context).copyWith(
-                      trackHeight: 2,
-                      thumbColor: Colors.blueAccent,
-                      overlayColor: Colors.blue,
-                      thumbShape: const RoundSliderThumbShape(
-                        disabledThumbRadius: 5,
-                        enabledThumbRadius: 5,
-                      ),
-                      overlayShape: const RoundSliderOverlayShape(
-                        overlayRadius: 10,
-                      ),
-                      activeTrackColor: Colors.blueAccent,
-                      inactiveTrackColor: Colors.grey,
-                    ),
-                    child: Slider(
-                        value: _slider,
-                        min: 0.0,
-                        max: 1.0,
-                        onChanged: onChangeSlider,
-                        onChangeEnd: onChangeSliderEnd))),
+            SizedBox(
+              width: MediaQuery.of(context).size.width * .75,
+              child: Text(
+                _currentTitle,
+                style:
+                    const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                softWrap: true,
+              ),
+            ),
+            IconButton(
+                onPressed: () {},
+                icon: const Icon(Icons.favorite_border_outlined)),
           ],
         ),
+        Container(
+          padding: const EdgeInsets.only(top: 20),
+          child: Row(
+            children: [
+              Expanded(
+                  child: SliderTheme(
+                      data: SliderTheme.of(context).copyWith(
+                        trackHeight: 2,
+                        thumbColor: Colors.white,
+                        overlayColor: Colors.white,
+                        thumbShape: const RoundSliderThumbShape(
+                          disabledThumbRadius: 7,
+                          enabledThumbRadius: 7,
+                        ),
+                        overlayShape: const RoundSliderOverlayShape(
+                          overlayRadius: 10,
+                        ),
+                        activeTrackColor: Colors.white,
+                        inactiveTrackColor: Colors.grey,
+                      ),
+                      child: Slider(
+                          value: _slider,
+                          min: 0.0,
+                          max: 1.0,
+                          onChanged: onChangeSlider,
+                          onChangeEnd: onChangeSliderEnd))),
+            ],
+          ),
+        ),
+        const SizedBox(
+          height: 15,
+        ),
         Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
               AudioService.formatAudioDuration(_position),
+              style: const TextStyle(fontSize: 14),
             ),
-            const Text(
-              " / ",
-            ),
-            Text(
-              AudioService.formatAudioDuration(_duration),
-            ),
-          ],
-        ),
-        Row(
-          children: [
             IconButton(
+                iconSize: 40,
                 onPressed: prevSong,
                 icon: const Icon(Icons.skip_previous_outlined)),
             IconButton(
+                iconSize: 75,
                 onPressed: playSong,
                 icon: _isPlaying
                     ? const Icon(Icons.pause_circle_filled_outlined)
                     : const Icon(Icons.play_circle_outline_outlined)),
             IconButton(
-                onPressed: stopSong, icon: const Icon(Icons.stop_circle)),
-            IconButton(
+                iconSize: 40,
                 onPressed: nextSong,
                 icon: const Icon(Icons.skip_next_outlined)),
-            IconButton(icon: getPlayModeIcon(playMode), onPressed: changeMode),
+            Text(
+              AudioService.formatAudioDuration(_duration),
+              style: const TextStyle(fontSize: 14),
+            ),
+            // IconButton(icon: getPlayModeIcon(playMode), onPressed: changeMode),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            IconButton(onPressed: () {}, icon: const Icon(Icons.repeat)),
+            IconButton(onPressed: () {}, icon: const Icon(Icons.list)),
+            IconButton(onPressed: () {}, icon: const Icon(Icons.shuffle)),
           ],
         )
       ],

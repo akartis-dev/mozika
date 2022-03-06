@@ -14,7 +14,6 @@ import 'package:mozika/screen/widget/appBar/bottom_bar.dart';
 import 'package:mozika/screen/widget/music/one_music_item.dart';
 import 'package:mozika/screen/widget/music/search_input.dart';
 import 'package:mozika/screen/widget/player/mini_player.dart';
-import 'package:mozika/services/audio_service.dart';
 import 'package:mozika/utils/theme.dart';
 
 class PlayerScreen extends StatefulWidget {

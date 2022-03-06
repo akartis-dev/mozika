@@ -26,9 +26,12 @@ class App extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         home: PlayerScreen(),
         theme: ThemeData(
+            iconTheme: const IconThemeData(color: Colors.white),
             primaryColor: CustomTheme.primary,
             primaryTextTheme: const TextTheme(
-                bodyText2: TextStyle(color: Colors.white),
+                bodyText2: TextStyle(
+                  color: Colors.white,
+                ),
                 bodyText1: TextStyle(color: Colors.white)),
             textTheme: const TextTheme(
                 bodyText2: TextStyle(color: Colors.white),
