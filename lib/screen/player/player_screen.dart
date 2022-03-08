@@ -16,6 +16,8 @@ import 'package:mozika/screen/widget/music/search_input.dart';
 import 'package:mozika/screen/widget/player/mini_player.dart';
 import 'package:mozika/utils/theme.dart';
 
+import '../../bloc/player/player_bloc.dart';
+
 class PlayerScreen extends StatefulWidget {
   const PlayerScreen({Key? key}) : super(key: key);
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:local_music_repository/local_music_repository.dart';
 import 'package:mozika/bloc/audio/audio_bloc.dart';
+import 'package:mozika/bloc/player/player_bloc.dart';
 import 'package:mozika/screen/player/player_screen.dart';
 import 'package:mozika/utils/theme.dart';
 
@@ -20,7 +21,9 @@ class App extends StatelessWidget {
       providers: [
         BlocProvider<AudioBloc>(
             create: (BuildContext context) =>
-                AudioBloc(localRepository: LocalRepository()))
+                AudioBloc(localRepository: LocalRepository())),
+        BlocProvider<PlayerBloc>(
+            create: (BuildContext context) => PlayerBloc()..add(PlayerPlay()))
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

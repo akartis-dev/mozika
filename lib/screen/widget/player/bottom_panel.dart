@@ -1,5 +1,8 @@
 import 'package:audio_manager/audio_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mozika/bloc/audio/audio_bloc.dart';
+import 'package:mozika/bloc/player/player_bloc.dart';
 import 'package:mozika/services/audio_service.dart';
 
 class PlayerBottomPanel extends StatefulWidget {
@@ -42,7 +45,7 @@ class _PlayerBottomPanelState extends State<PlayerBottomPanel> {
   @override
   void initState() {
     super.initState();
-    onChangeAudioEvent();
+    // onChangeAudioEvent();
   }
 
   void nextSong() {
@@ -111,20 +114,6 @@ class _PlayerBottomPanelState extends State<PlayerBottomPanel> {
     });
   }
 
-  void onChangeSlider(value) {
-    setState(() {
-      _slider = value;
-    });
-  }
-
-  void onChangeSliderEnd(value) {
-    if (_duration != null) {
-      Duration msec =
-          Duration(milliseconds: (_duration.inMilliseconds * value).round());
-      AudioManager.instance.seekTo(msec);
-    }
-  }
-
   String? _currentMusicPlaying() {
     setState(() {
       _currentTitle = AudioManager.instance.info?.title ?? "";
@@ -139,14 +128,16 @@ class _PlayerBottomPanelState extends State<PlayerBottomPanel> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             SizedBox(
-              width: MediaQuery.of(context).size.width * .75,
-              child: Text(
-                _currentTitle,
-                style:
-                    const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                softWrap: true,
-              ),
-            ),
+                width: MediaQuery.of(context).size.width * .75,
+                child: BlocBuilder<PlayerBloc, PlayerState>(
+                    builder: (context, state) {
+                  return Text(
+                    state.title,
+                    style: const TextStyle(
+                        fontSize: 24, fontWeight: FontWeight.bold),
+                    softWrap: true,
+                  );
+                })),
             IconButton(
                 onPressed: () {},
                 icon: const Icon(Icons.favorite_border_outlined)),
@@ -172,12 +163,23 @@ class _PlayerBottomPanelState extends State<PlayerBottomPanel> {
                         activeTrackColor: Colors.white,
                         inactiveTrackColor: Colors.grey,
                       ),
-                      child: Slider(
-                          value: _slider,
+                      child: BlocBuilder<PlayerBloc, PlayerState>(
+                          builder: (context, state) {
+                        double sliderValue = state.position.inMilliseconds /
+                            state.duration.inMilliseconds;
+
+                        return Slider(
+                          value: sliderValue.isNaN ? 0 : sliderValue,
                           min: 0.0,
                           max: 1.0,
-                          onChanged: onChangeSlider,
-                          onChangeEnd: onChangeSliderEnd))),
+                          onChangeEnd: (double value) {
+                            context
+                                .read<PlayerBloc>()
+                                .add(PlayerChangeSlider(value));
+                          },
+                          onChanged: (double value) {},
+                        );
+                      })))
             ],
           ),
         ),
@@ -187,10 +189,13 @@ class _PlayerBottomPanelState extends State<PlayerBottomPanel> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              AudioService.formatAudioDuration(_position),
-              style: const TextStyle(fontSize: 14),
-            ),
+            BlocBuilder<PlayerBloc, PlayerState>(builder: (context, state) {
+              return Text(
+                AudioService.formatAudioDuration(state.position),
+                style: const TextStyle(fontSize: 14),
+              );
+            }),
+
             IconButton(
                 iconSize: 40,
                 onPressed: prevSong,
@@ -205,10 +210,12 @@ class _PlayerBottomPanelState extends State<PlayerBottomPanel> {
                 iconSize: 40,
                 onPressed: nextSong,
                 icon: const Icon(Icons.skip_next_outlined)),
-            Text(
-              AudioService.formatAudioDuration(_duration),
-              style: const TextStyle(fontSize: 14),
-            ),
+            BlocBuilder<PlayerBloc, PlayerState>(builder: (context, state) {
+              return Text(
+                AudioService.formatAudioDuration(state.duration),
+                style: const TextStyle(fontSize: 14),
+              );
+            }),
             // IconButton(icon: getPlayModeIcon(playMode), onPressed: changeMode),
           ],
         ),
