@@ -1,6 +1,8 @@
 import 'package:audio_manager/audio_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:glassmorphism/glassmorphism.dart';
+import 'package:mozika/bloc/player/player_bloc.dart';
 import 'package:mozika/utils/theme.dart';
 
 class MiniPlayer extends StatefulWidget {
@@ -11,41 +13,8 @@ class MiniPlayer extends StatefulWidget {
 }
 
 class _MiniPlayerState extends State<MiniPlayer> {
-  String? currentTitle = "";
-  bool isPlaying = false;
-
-  @override
-  void initState() {
-    super.initState();
-    playerEvent();
-  }
-
-  void playerEvent() {
-    AudioManager.instance.onEvents((events, args) {
-      switch (events) {
-        case AudioManagerEvents.timeupdate:
-          if (currentTitle == "") {
-            currentTitle = AudioManager.instance.info?.title;
-            setState(() {});
-          }
-          break;
-        case AudioManagerEvents.ready:
-          currentTitle = AudioManager.instance.info?.title;
-          setState(() {});
-          break;
-        case AudioManagerEvents.playstatus:
-          isPlaying = AudioManager.instance.isPlaying;
-          setState(() {});
-      }
-    });
-  }
-
   void playOrPause() {
     AudioManager.instance.playOrPause();
-  }
-
-  void next() {
-    AudioManager.instance.next();
   }
 
   @override
@@ -92,28 +61,36 @@ class _MiniPlayerState extends State<MiniPlayer> {
                   width: 15,
                 ),
                 SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.45,
-                  child: Text(
-                    currentTitle ?? "No music",
-                    style: TextStyle(fontSize: CustomTheme.h4),
-                  ),
-                ),
+                    width: MediaQuery.of(context).size.width * 0.45,
+                    child: BlocBuilder<PlayerBloc, PlayerState>(
+                        builder: ((context, state) {
+                      return Text(
+                        state.title,
+                        style: TextStyle(fontSize: CustomTheme.h4),
+                      );
+                    }))),
                 Expanded(child: Container()),
+                BlocBuilder<PlayerBloc, PlayerState>(
+                  builder: (context, state) {
+                    return IconButton(
+                        onPressed: playOrPause,
+                        icon: state.isPlay
+                            ? const Icon(
+                                Icons.pause_circle,
+                                color: Colors.white,
+                                size: 30,
+                              )
+                            : const Icon(
+                                Icons.play_arrow,
+                                color: Colors.white,
+                                size: 30,
+                              ));
+                  },
+                ),
                 IconButton(
-                    onPressed: playOrPause,
-                    icon: isPlaying
-                        ? const Icon(
-                            Icons.pause_circle,
-                            color: Colors.white,
-                            size: 30,
-                          )
-                        : const Icon(
-                            Icons.play_arrow,
-                            color: Colors.white,
-                            size: 30,
-                          )),
-                IconButton(
-                    onPressed: next,
+                    onPressed: () {
+                      context.read<PlayerBloc>().add(PlayerNext());
+                    },
                     icon: const Icon(
                       Icons.skip_next_outlined,
                       color: Colors.white,
