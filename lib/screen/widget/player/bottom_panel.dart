@@ -1,7 +1,6 @@
 import 'package:audio_manager/audio_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mozika/bloc/audio/audio_bloc.dart';
 import 'package:mozika/bloc/player/player_bloc.dart';
 import 'package:mozika/services/audio_service.dart';
 
@@ -14,110 +13,14 @@ class PlayerBottomPanel extends StatefulWidget {
 
 class _PlayerBottomPanelState extends State<PlayerBottomPanel> {
   PlayMode playMode = AudioManager.instance.playMode;
-  Duration _duration = const Duration(milliseconds: 0);
-  Duration _position = const Duration(milliseconds: 0);
-  double _slider = 0;
-  String _currentTitle = '';
-  bool _isPlaying = false;
-  bool _refreshPlayer = false;
-
-  Widget getPlayModeIcon(PlayMode playMode) {
-    print(playMode);
-    switch (playMode) {
-      case PlayMode.sequence:
-        return const Icon(
-          Icons.repeat,
-          color: Colors.black,
-        );
-      case PlayMode.shuffle:
-        return const Icon(
-          Icons.shuffle,
-          color: Colors.black,
-        );
-      case PlayMode.single:
-        return const Icon(
-          Icons.repeat_one,
-          color: Colors.black,
-        );
-    }
-  }
 
   @override
   void initState() {
     super.initState();
-    // onChangeAudioEvent();
-  }
-
-  void nextSong() {
-    AudioManager.instance.next();
-  }
-
-  void prevSong() {
-    AudioManager.instance.previous();
   }
 
   void playSong() {
     AudioManager.instance.playOrPause();
-  }
-
-  void changeMode() {
-    if (playMode == PlayMode.sequence) {
-      AudioManager.instance.nextMode(playMode: PlayMode.shuffle);
-    }
-
-    if (playMode == PlayMode.shuffle) {
-      AudioManager.instance.nextMode(playMode: PlayMode.single);
-    }
-
-    if (playMode == PlayMode.single) {
-      AudioManager.instance.nextMode(playMode: PlayMode.sequence);
-    }
-
-    setState(() {});
-  }
-
-  void onChangeAudioEvent() {
-    AudioManager.instance.onEvents((events, args) {
-      switch (events) {
-        case AudioManagerEvents.ready:
-          _position = AudioManager.instance.position;
-          _duration = AudioManager.instance.duration;
-          _currentMusicPlaying();
-          setState(() {});
-          break;
-        case AudioManagerEvents.timeupdate:
-          if (!_refreshPlayer) {
-            _position = AudioManager.instance.position;
-            _duration = AudioManager.instance.duration;
-            _currentMusicPlaying();
-            _isPlaying = AudioManager.instance.isPlaying;
-
-            setState(() {
-              _refreshPlayer = true;
-            });
-          }
-
-          _position = AudioManager.instance.position;
-          _slider = _position.inMilliseconds / _duration.inMilliseconds;
-          setState(() {});
-          break;
-        case AudioManagerEvents.playstatus:
-          _isPlaying = AudioManager.instance.isPlaying;
-
-          setState(() {});
-          break;
-        case AudioManagerEvents.ended:
-          AudioManager.instance.next();
-          setState(() {});
-          break;
-      }
-    });
-  }
-
-  String? _currentMusicPlaying() {
-    setState(() {
-      _currentTitle = AudioManager.instance.info?.title ?? "";
-    });
   }
 
   @override
