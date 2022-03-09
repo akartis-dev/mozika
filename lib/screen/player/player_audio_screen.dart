@@ -53,8 +53,8 @@ class _PlayerAudioScreenState extends State<PlayerAudioScreen> {
             SizedBox(
               height: MediaQuery.of(context).size.height * .45,
               child: Image.asset(
-                "assets/images/mucis.png",
-                fit: BoxFit.cover,
+                "assets/images/player.png",
+                fit: BoxFit.scaleDown,
               ),
             ),
             const SizedBox(

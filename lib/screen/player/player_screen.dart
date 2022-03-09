@@ -122,6 +122,7 @@ class PlayerScreenState extends State<PlayerScreen> {
                                   folder: audioModel.folder,
                                   uriPath: audioModel.uriPath);
                               return OneMusicItem(
+                                musicId: index,
                                 key: Key(index.toString()),
                                 audio: currentMusic,
                               );

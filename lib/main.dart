@@ -23,7 +23,8 @@ class App extends StatelessWidget {
             create: (BuildContext context) =>
                 AudioBloc(localRepository: LocalRepository())),
         BlocProvider<PlayerBloc>(
-            create: (BuildContext context) => PlayerBloc()..add(PlayerPlay()))
+            create: (BuildContext context) =>
+                PlayerBloc(LocalRepository())..add(PlayerPlay()))
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

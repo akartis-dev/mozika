@@ -1,56 +1,32 @@
-import 'package:audio_manager/audio_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:mozika/bloc/player/player_bloc.dart';
 import 'package:mozika/model/entity/audio_model.dart';
 import 'package:mozika/utils/theme.dart';
-
+import 'package:provider/provider.dart';
 import '../../../services/audio_service.dart';
 
 class OneMusicItem extends StatefulWidget {
   final Audio audio;
+  final int musicId;
 
-  const OneMusicItem({
-    Key? key,
-    required this.audio,
-  }) : super(key: key);
+  const OneMusicItem({Key? key, required this.audio, required this.musicId})
+      : super(key: key);
 
   @override
   _OneMusicItemState createState() => _OneMusicItemState();
 }
 
 class _OneMusicItemState extends State<OneMusicItem> {
-  String? _currentTitle;
-
   @override
   void initState() {
     super.initState();
-    // audioManagerEvent();
-  }
-
-  void audioManagerEvent() {
-    AudioManager.instance.onEvents((events, args) {
-      switch (events) {
-        case AudioManagerEvents.ready:
-          _currentTitle = AudioManager.instance.info?.title;
-
-          setState(() {});
-          break;
-        case AudioManagerEvents.start:
-          setState(() {
-            // _isPlaying = true;
-          });
-      }
-    });
   }
 
   void onTapHandler() {
     String audioName = widget.audio.name;
 
-    if (_currentTitle != audioName) {
-      AudioService.playMusicInAudioManager(
-          uri: widget.audio.uriPath, name: audioName);
-    } else {
-      AudioManager.instance.playOrPause();
-    }
+    AudioService.playMusicInAudioManager(
+        uri: widget.audio.uriPath, name: audioName);
   }
 
   @override
@@ -75,6 +51,9 @@ class _OneMusicItemState extends State<OneMusicItem> {
             ),
           ],
         ),
-        onTap: onTapHandler);
+        onTap: () {
+          context.read<PlayerBloc>().add(PlayerCurrentPlaying(widget.musicId));
+          onTapHandler();
+        });
   }
 }

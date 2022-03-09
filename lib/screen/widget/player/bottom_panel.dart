@@ -198,17 +198,23 @@ class _PlayerBottomPanelState extends State<PlayerBottomPanel> {
 
             IconButton(
                 iconSize: 40,
-                onPressed: prevSong,
+                onPressed: () {
+                  context.read<PlayerBloc>().add(PlayerPrevious());
+                },
                 icon: const Icon(Icons.skip_previous_outlined)),
-            IconButton(
-                iconSize: 75,
-                onPressed: playSong,
-                icon: _isPlaying
-                    ? const Icon(Icons.pause_circle_filled_outlined)
-                    : const Icon(Icons.play_circle_outline_outlined)),
+            BlocBuilder<PlayerBloc, PlayerState>(builder: ((context, state) {
+              return IconButton(
+                  iconSize: 75,
+                  onPressed: playSong,
+                  icon: state.isPlay
+                      ? const Icon(Icons.pause_circle_filled_outlined)
+                      : const Icon(Icons.play_circle_outline_outlined));
+            })),
             IconButton(
                 iconSize: 40,
-                onPressed: nextSong,
+                onPressed: () {
+                  context.read<PlayerBloc>().add(PlayerNext());
+                },
                 icon: const Icon(Icons.skip_next_outlined)),
             BlocBuilder<PlayerBloc, PlayerState>(builder: (context, state) {
               return Text(

@@ -16,7 +16,11 @@ class PlayerChangeProperty extends PlayerEvent {
   const PlayerChangeProperty(this.duration, this.position);
 }
 
-class PlayerPause extends PlayerEvent {}
+class PlayerPause extends PlayerEvent {
+  final bool play;
+
+  const PlayerPause(this.play);
+}
 
 class PlayerChangeSlider extends PlayerEvent {
   final double value;
@@ -28,4 +32,14 @@ class PlayerReadyTitle extends PlayerEvent {
   final String title;
 
   const PlayerReadyTitle(this.title);
+}
+
+class PlayerNext extends PlayerEvent {}
+
+class PlayerPrevious extends PlayerEvent {}
+
+class PlayerCurrentPlaying extends PlayerEvent {
+  final int id;
+
+  const PlayerCurrentPlaying(this.id);
 }
