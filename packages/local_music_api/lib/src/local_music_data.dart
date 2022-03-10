@@ -73,12 +73,14 @@ class LocalMusicApi implements LocalMusic {
     }
 
     return List.generate(
-        data.length,
-        (i) => AudioModels(
-            id: data[i]['id'],
-            name: data[i]['name'],
-            folder: data[i]['folder'],
-            uriPath: data[i]['uriPath']));
+      data.length,
+      (i) => AudioModels(
+          id: data[i]['id'],
+          name: data[i]['name'],
+          folder: data[i]['folder'],
+          uriPath: data[i]['uriPath'],
+          favorite: data[i]['favorite']),
+    );
   }
 
   /// Delete everything in audio database
@@ -88,5 +90,14 @@ class LocalMusicApi implements LocalMusic {
     await db.execute("DELETE FROM audio");
 
     return true;
+  }
+
+  /// Set audio favorite
+  @override
+  Future<bool> setAudioToFavorite(AudioModels audio) async {
+    Database db = await DatabaseInstance.createInstance();
+    await db.rawUpdate("UPDATE audio SET favorite = ? where id = ?",
+        [audio.favoriteOpposite, audio.id]);
+    return !audio.favoriteBool;
   }
 }

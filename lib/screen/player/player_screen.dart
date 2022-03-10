@@ -1,13 +1,9 @@
-import 'dart:developer';
-import 'dart:io';
-
 import 'package:audio_manager/audio_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:local_music_repository/local_music_repository.dart';
 import 'package:mozika/bloc/audio/audio_bloc.dart';
-import 'package:mozika/model/entity/audio_model.dart';
 import 'package:mozika/screen/player/player_audio_screen.dart';
 import 'package:mozika/screen/widget/appBar/appbar.dart';
 import 'package:mozika/screen/widget/appBar/bottom_bar.dart';
@@ -15,8 +11,6 @@ import 'package:mozika/screen/widget/music/one_music_item.dart';
 import 'package:mozika/screen/widget/music/search_input.dart';
 import 'package:mozika/screen/widget/player/mini_player.dart';
 import 'package:mozika/utils/theme.dart';
-
-import '../../bloc/player/player_bloc.dart';
 
 class PlayerScreen extends StatefulWidget {
   const PlayerScreen({Key? key}) : super(key: key);
@@ -27,8 +21,6 @@ class PlayerScreen extends StatefulWidget {
 
 class PlayerScreenState extends State<PlayerScreen> {
   String _platformVersion = 'Unknown';
-
-  late List<Audio> audioList = [];
 
   @override
   void initState() {
@@ -80,9 +72,7 @@ class PlayerScreenState extends State<PlayerScreen> {
         ),
         bottomNavigationBar: const BottomBar(),
         body: Stack(children: [
-          SearchInput(),
           BlocBuilder<AudioBloc, AudioStates>(builder: ((context, state) {
-            // state.audios.listen(print);
             return StreamBuilder(
               stream: state.audios,
               builder: (BuildContext context,
@@ -117,14 +107,10 @@ class PlayerScreenState extends State<PlayerScreen> {
                         child: ListView.separated(
                             itemBuilder: (context, index) {
                               AudioModels audioModel = snapshot.data![index];
-                              Audio currentMusic = Audio(
-                                  name: audioModel.name,
-                                  folder: audioModel.folder,
-                                  uriPath: audioModel.uriPath);
                               return OneMusicItem(
                                 musicId: index,
                                 key: Key(index.toString()),
-                                audio: currentMusic,
+                                audio: audioModel,
                               );
                             },
                             separatorBuilder: (context, index) =>

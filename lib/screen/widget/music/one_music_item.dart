@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:local_music_repository/local_music_repository.dart';
+import 'package:mozika/bloc/audio/audio_bloc.dart';
 import 'package:mozika/bloc/player/player_bloc.dart';
-import 'package:mozika/model/entity/audio_model.dart';
 import 'package:mozika/utils/theme.dart';
 import 'package:provider/provider.dart';
 import '../../../services/audio_service.dart';
 
 class OneMusicItem extends StatefulWidget {
-  final Audio audio;
+  final AudioModels audio;
   final int musicId;
 
   const OneMusicItem({Key? key, required this.audio, required this.musicId})
@@ -45,9 +46,15 @@ class _OneMusicItemState extends State<OneMusicItem> {
           mainAxisSize: MainAxisSize.min,
           children: [
             IconButton(
-              onPressed: () {},
-              icon: Icon(Icons.favorite_outline_outlined,
-                  size: 23, color: CustomTheme.primary),
+              onPressed: () {
+                context.read<AudioBloc>().add(AudioAddFavorite(widget.audio));
+              },
+              icon: Icon(
+                  widget.audio.favoriteBool
+                      ? Icons.favorite
+                      : Icons.favorite_outline_outlined,
+                  size: 23,
+                  color: CustomTheme.primary),
             ),
           ],
         ),

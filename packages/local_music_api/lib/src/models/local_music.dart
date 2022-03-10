@@ -11,4 +11,6 @@ abstract class LocalMusic {
   Future<List<AudioModels>> getAllAudioList();
 
   Future<bool> resetAudioTable();
+
+  Future<bool> setAudioToFavorite(AudioModels audio);
 }

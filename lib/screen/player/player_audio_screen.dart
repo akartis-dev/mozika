@@ -1,13 +1,6 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mozika/model/entity/audio_model.dart';
 import 'package:mozika/screen/widget/player/bottom_panel.dart';
-import 'package:mozika/services/audio_service.dart';
 import 'package:mozika/utils/theme.dart';
-
-import '../../bloc/player/player_bloc.dart';
 
 class PlayerAudioScreen extends StatefulWidget {
   const PlayerAudioScreen({Key? key}) : super(key: key);
@@ -20,14 +13,6 @@ class _PlayerAudioScreenState extends State<PlayerAudioScreen> {
   @override
   void initState() {
     super.initState();
-  }
-
-  void setupAudio() async {
-    final List<Audio> allAudio = await AudioService().getAllAudioFromDb();
-    final _random = Random();
-    final Audio randomAudio = allAudio[_random.nextInt(allAudio.length)];
-    AudioService.playMusicInAudioManager(
-        uri: randomAudio.uriPath, name: randomAudio.name);
   }
 
   @override

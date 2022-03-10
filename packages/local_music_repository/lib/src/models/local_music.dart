@@ -13,4 +13,6 @@ abstract class LocalMusicRepositoryInterface {
   NextPrevAudioModels getNextSong(int current);
 
   NextPrevAudioModels getPrevSong(int current);
+
+  Future<bool> addFavoriteSong(AudioModels audio);
 }

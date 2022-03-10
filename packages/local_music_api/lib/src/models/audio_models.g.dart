@@ -11,6 +11,7 @@ AudioModels _$AudioModelsFromJson(Map<String, dynamic> json) => AudioModels(
       name: json['name'] as String,
       folder: json['folder'] as String,
       uriPath: json['uriPath'] as String,
+      favorite: json['favorite'] as int? ?? 0,
     );
 
 Map<String, dynamic> _$AudioModelsToJson(AudioModels instance) =>
@@ -19,4 +20,5 @@ Map<String, dynamic> _$AudioModelsToJson(AudioModels instance) =>
       'name': instance.name,
       'folder': instance.folder,
       'uriPath': instance.uriPath,
+      'favorite': instance.favorite,
     };

@@ -14,11 +14,6 @@ class PlayerBottomPanel extends StatefulWidget {
 class _PlayerBottomPanelState extends State<PlayerBottomPanel> {
   PlayMode playMode = AudioManager.instance.playMode;
 
-  @override
-  void initState() {
-    super.initState();
-  }
-
   void playSong() {
     AudioManager.instance.playOrPause();
   }

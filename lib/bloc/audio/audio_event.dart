@@ -7,6 +7,9 @@ abstract class AudioEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class AudioListStarted extends AudioEvent {}
-
 class AudioResetList extends AudioEvent {}
+
+class AudioAddFavorite extends AudioEvent {
+  final AudioModels audioModels;
+  const AudioAddFavorite(this.audioModels);
+}

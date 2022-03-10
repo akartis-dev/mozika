@@ -13,6 +13,6 @@ class DatabaseInstance {
     return openDatabase(join(await getDatabasesPath(), 'mozika.db'),
         onCreate: ((db, version) {
       return db.execute(Constants.sqliteInitTable);
-    }), version: 1);
+    }), version: 2);
   }
 }
